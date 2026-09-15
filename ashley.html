@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday!</title>
+<style>
+  :root{
+    --ink: #ffffff;
+    --pink: #ff2f7e;
+    --pink-soft: #ffd1e2;
+    --paper: #0a0a0a;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    padding:0;
+    height:100%;
+    overflow-x:hidden;
+    font-family:-apple-system, 'Helvetica Neue', Arial, sans-serif;
+    background:radial-gradient(circle at 50% 15%, #1a0010 0%, #0a0a0a 60%, #000000 100%);
+  }
+  .stage{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:40px 20px;
+  }
+  .card{
+    background:transparent;
+    border:none;
+    border-radius:18px;
+    padding:44px 34px;
+    box-shadow:none;
+    max-width:480px;
+    animation:pop 0.6s ease-out;
+    position:relative;
+    z-index:5;
+  }
+  @keyframes pop{
+    0%{transform:scale(0.96);opacity:0;}
+    100%{transform:scale(1);opacity:1;}
+  }
+  .title{
+    font-size:1.9em;
+    font-weight:600;
+    letter-spacing:0.02em;
+    color:var(--ink);
+    margin:0 0 6px;
+    text-shadow:0 0 18px rgba(255,47,126,0.35);
+  }
+  .title span, .name span, .message span, .btn span, .sub span{
+    filter:grayscale(1) sepia(1) saturate(6) hue-rotate(295deg) brightness(1.3);
+  }
+  .name{
+    font-size:1.5em;
+    font-weight:600;
+    color:var(--pink);
+    margin:0 0 22px;
+    letter-spacing:0.03em;
+    text-shadow:0 0 22px rgba(255,47,126,0.45);
+  }
+  .name span{
+    display:inline-block;
+  }
+  .paw-row{
+    font-size:1.2em;
+    margin-top:14px;
+    letter-spacing:10px;
+    filter:grayscale(1) sepia(1) saturate(6) hue-rotate(295deg) opacity(0.9) brightness(1.3);
+  }
+  .paw-row span{
+    display:inline-block;
+  }
+  .message{
+    font-size:1.1em;
+    font-weight:500;
+    color:var(--ink);
+    margin:6px 0 4px;
+  }
+ 
+  /* Floating balloons */
+  .balloon{
+    position:fixed;
+    bottom:-120px;
+    font-size:34px;
+    animation-name:floatUp;
+    animation-timing-function:ease-in;
+    animation-iteration-count:infinite;
+    z-index:1;
+    opacity:0.5;
+    filter:grayscale(1) sepia(1) saturate(6) hue-rotate(295deg);
+  }
+  @keyframes floatUp{
+    0%{transform:translateY(0) translateX(0) rotate(0deg);}
+    50%{transform:translateY(-55vh) translateX(20px) rotate(8deg);}
+    100%{transform:translateY(-115vh) translateX(-15px) rotate(-8deg);}
+  }
+ 
+  /* Running dog */
+  .dog-track{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:70px;
+    overflow:hidden;
+    z-index:4;
+    pointer-events:none;
+  }
+  .dog{
+    position:absolute;
+    bottom:5px;
+    font-size:34px;
+    animation:runAcross 8s linear infinite;
+    filter:grayscale(1) sepia(1) saturate(6) hue-rotate(295deg) opacity(0.85);
+  }
+  @keyframes runAcross{
+    0%{left:-60px; transform:scaleX(1);}
+    49%{transform:scaleX(1);}
+    50%{left:100%; transform:scaleX(-1);}
+    99%{transform:scaleX(-1);}
+    100%{left:-60px; transform:scaleX(1);}
+  }
+ 
+  /* Falling paws/hearts confetti */
+  .confetti{
+    position:fixed;
+    top:-40px;
+    font-size:16px;
+    animation-name:fall;
+    animation-timing-function:linear;
+    animation-iteration-count:infinite;
+    z-index:2;
+    filter:grayscale(1) sepia(1) saturate(6) hue-rotate(295deg);
+    opacity:0.6;
+  }
+  @keyframes fall{
+    0%{transform:translateY(0) rotate(0deg); opacity:0.5;}
+    100%{transform:translateY(110vh) rotate(360deg); opacity:0.2;}
+  }
+ 
+  .btn{
+    margin-top:24px;
+    padding:11px 24px;
+    border:1px solid var(--pink);
+    border-radius:30px;
+    background:var(--pink);
+    color:#fff;
+    font-size:0.92em;
+    font-weight:600;
+    letter-spacing:0.02em;
+    font-family:inherit;
+    cursor:pointer;
+    transition:transform 0.15s ease, opacity 0.15s ease;
+    box-shadow:0 0 20px rgba(255,47,126,0.5);
+  }
+  .btn:hover{ opacity:0.88; }
+  .btn:active{transform:scale(0.96);}
+ 
+  .sub{
+    font-size:0.78em;
+    color:rgba(255,255,255,0.5);
+    margin-top:16px;
+    letter-spacing:0.02em;
+  }
+ 
+  /* Real 3D cake canvas */
+  .cake-wrap{
+    width:100%;
+    max-width:360px;
+    height:320px;
+    margin:6px auto 10px;
+    position:relative;
+    z-index:5;
+    border-radius:14px;
+    overflow:visible;
+    background:transparent;
+    touch-action:none;
+  }
+  .cake-wrap canvas{
+    display:block;
+    width:100%!important;
+    height:100%!important;
+    cursor:grab;
+  }
+  .cake-wrap canvas:active{ cursor:grabbing; }
+  .cake-hint{
+    font-size:0.72em;
+    color:rgba(255,255,255,0.5);
+    opacity:0.9;
+    margin:-4px 0 8px;
+    filter:grayscale(1) sepia(1) saturate(6) hue-rotate(295deg);
+  }
+ 
+  /* Baked goods floating */
+  .treat{
+    position:fixed;
+    bottom:-100px;
+    font-size:26px;
+    animation-name:floatUpTreat;
+    animation-timing-function:ease-in;
+    animation-iteration-count:infinite;
+    z-index:1;
+    opacity:0.5;
+    filter:grayscale(1) sepia(1) saturate(6) hue-rotate(295deg);
+  }
+  @keyframes floatUpTreat{
+    0%{transform:translateY(0) translateX(0) rotate(0deg);}
+    50%{transform:translateY(-55vh) translateX(-18px) rotate(-10deg);}
+    100%{transform:translateY(-115vh) translateX(12px) rotate(10deg);}
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+ 
+<div class="stage">
+  <div class="card">
+    <p class="title"><span>🎂</span> Happy Birthday</p>
+    <p class="name"><span>🐾</span> Ash <span>🐾</span></p>
+ 
+    <div class="cake-wrap" id="cakeWrap"></div>
+    <p class="cake-hint">🖱️ drag to spin the cake 🎂</p>
+ 
+    <p class="message"> <span></span></p>
+ 
+    <div class="paw-row">
+      <span>🐾</span><span>🐾</span><span>🐾</span>
+    </div>
+    <button class="btn" onclick="celebrate()">More wishes <span>🐾</span></button>
+    <p class="sub"></p>
+  </div>
+</div>
+ 
+<div class="dog-track">
+  <div class="dog">🐕</div>
+</div>
+ 
+<script>
+  // Floating balloons
+  const balloonEmojis = ["🎈","🎈","🎈","🎀"];
+  function spawnBalloon(){
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    b.textContent = balloonEmojis[Math.floor(Math.random()*balloonEmojis.length)];
+    b.style.left = Math.random()*95 + 'vw';
+    const duration = 6 + Math.random()*4;
+    b.style.animationDuration = duration + 's';
+    b.style.fontSize = (36 + Math.random()*24) + 'px';
+    document.body.appendChild(b);
+    setTimeout(()=>b.remove(), duration*1000);
+  }
+  setInterval(spawnBalloon, 2200);
+  for(let i=0;i<3;i++) setTimeout(spawnBalloon, i*600);
+ 
+  // Floating baked goods (she loves these!)
+  const treatEmojis = ["🍪","🧁","🥐","🍩","🥧","🍰"];
+  function spawnTreat(){
+    const t = document.createElement('div');
+    t.className = 'treat';
+    t.textContent = treatEmojis[Math.floor(Math.random()*treatEmojis.length)];
+    t.style.left = Math.random()*95 + 'vw';
+    const duration = 7 + Math.random()*4;
+    t.style.animationDuration = duration + 's';
+    t.style.fontSize = (30 + Math.random()*18) + 'px';
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(), duration*1000);
+  }
+  setInterval(spawnTreat, 2600);
+  for(let i=0;i<2;i++) setTimeout(spawnTreat, i*600);
+ 
+  // Falling confetti (paws & hearts)
+  const confettiEmojis = ["🐾","💖","✨","🐶","🎉","🧁","🍪"];
+  function spawnConfetti(){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.textContent = confettiEmojis[Math.floor(Math.random()*confettiEmojis.length)];
+    c.style.left = Math.random()*100 + 'vw';
+    const duration = 4 + Math.random()*3;
+    c.style.animationDuration = duration + 's';
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), duration*1000);
+  }
+  setInterval(spawnConfetti, 900);
+ 
+  // Burst effect on button tap
+  function celebrate(){
+    for(let i=0;i<25;i++){
+      setTimeout(spawnConfetti, i*40);
+    }
+    for(let i=0;i<6;i++){
+      setTimeout(spawnBalloon, i*100);
+    }
+    for(let i=0;i<8;i++){
+      setTimeout(spawnTreat, i*70);
+    }
+  }
+</script>
+ 
+<script>
+  (function(){
+    const wrap = document.getElementById('cakeWrap');
+    const scene = new THREE.Scene();
+ 
+    const camera = new THREE.PerspectiveCamera(38, wrap.clientWidth/wrap.clientHeight, 0.1, 100);
+    camera.position.set(0, 2.1, 5.2);
+ 
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    wrap.appendChild(renderer.domElement);
+ 
+    // Lighting
+    scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+    const key = new THREE.DirectionalLight(0xffffff, 0.9);
+    key.position.set(3, 6, 4);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024,1024);
+    scene.add(key);
+    const fill = new THREE.DirectionalLight(0xf2f2f2, 0.3);
+    fill.position.set(-4, 2, -3);
+    scene.add(fill);
+ 
+    // Brighter, warmer candle glow — stronger point light + secondary flicker light
+    const candleGlow = new THREE.PointLight(0xff5c9e, 2.2, 6);
+    candleGlow.position.set(0, 2.35, 0);
+    scene.add(candleGlow);
+ 
+    const candleGlow2 = new THREE.PointLight(0xffc98a, 1.4, 4);
+    candleGlow2.position.set(0, 2.4, 0);
+    scene.add(candleGlow2);
+ 
+    const cake = new THREE.Group();
+    scene.add(cake);
+ 
+    // Plate
+    const plateGeo = new THREE.CylinderGeometry(1.7, 1.75, 0.08, 64);
+    const plateMat = new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.15, metalness:0.05 });
+    const plate = new THREE.Mesh(plateGeo, plateMat);
+    plate.position.y = -0.55;
+    plate.receiveShadow = true;
+    cake.add(plate);
+ 
+    function makeDrips(radius, topY, count, dripColor, minLen, maxLen){
+      const group = new THREE.Group();
+      const mat = new THREE.MeshStandardMaterial({ color: dripColor, roughness:0.35, metalness:0.05 });
+      for(let i=0;i<count;i++){
+        const angle = (i/count) * Math.PI*2 + (Math.random()*0.15);
+        const len = minLen + Math.random()*(maxLen-minLen);
+        const geo = new THREE.ConeGeometry(radius*0.09, len, 8);
+        const drip = new THREE.Mesh(geo, mat);
+        drip.rotation.x = Math.PI; // point tip down
+        drip.position.set(Math.cos(angle)*radius, topY - len/2 + 0.05, Math.sin(angle)*radius);
+        drip.castShadow = true;
+        group.add(drip);
+      }
+      // smooth ring covering the seam
+      const ringGeo = new THREE.TorusGeometry(radius, radius*0.09, 12, 48);
+      const ring = new THREE.Mesh(ringGeo, mat);
+      ring.rotation.x = Math.PI/2;
+      ring.position.y = topY;
+      ring.castShadow = true;
+      group.add(ring);
+      return group;
+    }
+ 
+    // Bottom tier (chocolate sponge w/ pink frosting)
+    const bottomR = 1.35, bottomH = 1.0, bottomY = 0.0;
+    const bottomGeo = new THREE.CylinderGeometry(bottomR, bottomR*1.02, bottomH, 64);
+    const bottomMat = new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.5, metalness:0.02 });
+    const bottomTier = new THREE.Mesh(bottomGeo, bottomMat);
+    bottomTier.position.y = bottomY + bottomH/2;
+    bottomTier.castShadow = true;
+    bottomTier.receiveShadow = true;
+    cake.add(bottomTier);
+    cake.add(makeDrips(bottomR*1.01, bottomY+bottomH, 18, 0xff2f7e, 0.16, 0.36));
+ 
+    // Top tier (vanilla sponge w/ cream frosting)
+    const topR = 0.92, topH = 0.82, topY = bottomY + bottomH;
+    const topGeo = new THREE.CylinderGeometry(topR, topR*1.02, topH, 64);
+    const topMat = new THREE.MeshStandardMaterial({ color:0x121212, roughness:0.4, metalness:0.05 });
+    const topTier = new THREE.Mesh(topGeo, topMat);
+    topTier.position.y = topY + topH/2;
+    topTier.castShadow = true;
+    topTier.receiveShadow = true;
+    cake.add(topTier);
+    cake.add(makeDrips(topR*1.01, topY+topH, 16, 0xffffff, 0.12, 0.28)); // white drip accent
+ 
+    // Frosting swirl ring on top surface — single clean ring, no clutter
+    const swirlMat = new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.35 });
+    const swirlTopY = topY + topH;
+    const swirlCount = 8;
+    const swirlRad = topR*0.62;
+    for(let i=0;i<swirlCount;i++){
+      const a = (i/swirlCount)*Math.PI*2;
+      const dollop = new THREE.Mesh(new THREE.SphereGeometry(0.085, 16, 16), swirlMat);
+      dollop.position.set(Math.cos(a)*swirlRad, swirlTopY+0.05, Math.sin(a)*swirlRad);
+      dollop.scale.y = 0.8;
+      dollop.castShadow = true;
+      cake.add(dollop);
+    }
+ 
+    // Single centered candle — the one clean accent
+    const candle = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.04,0.04,0.5,12),
+      new THREE.MeshStandardMaterial({ color:0xff2f7e, roughness:0.3 })
+    );
+    candle.position.set(0, swirlTopY+0.25, 0);
+    candle.castShadow = true;
+    cake.add(candle);
+ 
+    // Brighter flame with stronger emissive glow
+    const flame = new THREE.Mesh(
+      new THREE.ConeGeometry(0.06, 0.18, 10),
+      new THREE.MeshStandardMaterial({ color:0xffe3b0, emissive:0xff9a3d, emissiveIntensity:2.4, roughness:0.2 })
+    );
+    flame.position.set(0, swirlTopY+0.58, 0);
+    cake.add(flame);
+ 
+    // Soft glow halo sprite around the flame
+    const glowCanvas = document.createElement('canvas');
+    glowCanvas.width = 128; glowCanvas.height = 128;
+    const gctx = glowCanvas.getContext('2d');
+    const grad = gctx.createRadialGradient(64,64,0,64,64,64);
+    grad.addColorStop(0, 'rgba(255,220,150,0.9)');
+    grad.addColorStop(0.4, 'rgba(255,120,170,0.45)');
+    grad.addColorStop(1, 'rgba(255,120,170,0)');
+    gctx.fillStyle = grad;
+    gctx.fillRect(0,0,128,128);
+    const glowTex = new THREE.CanvasTexture(glowCanvas);
+    const glowMat = new THREE.SpriteMaterial({ map: glowTex, transparent:true, depthWrite:false });
+    const glowSprite = new THREE.Sprite(glowMat);
+    glowSprite.scale.set(1.1, 1.1, 1);
+    glowSprite.position.set(0, swirlTopY+0.6, 0);
+    cake.add(glowSprite);
+ 
+    // Ground shadow catcher
+    const shadowPlane = new THREE.Mesh(
+      new THREE.PlaneGeometry(6,6),
+      new THREE.ShadowMaterial({ opacity:0.18 })
+    );
+    shadowPlane.rotation.x = -Math.PI/2;
+    shadowPlane.position.y = -0.59;
+    shadowPlane.receiveShadow = true;
+    scene.add(shadowPlane);
+ 
+    cake.position.y = -0.35;
+ 
+    // Controls
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0.6, 0);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enablePan = false;
+    controls.minDistance = 3.2;
+    controls.maxDistance = 7;
+    controls.maxPolarAngle = Math.PI*0.55;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 1.6;
+    controls.update();
+ 
+    renderer.domElement.addEventListener('pointerdown', ()=>{ controls.autoRotate = false; });
+ 
+    function animate(t){
+      requestAnimationFrame(animate);
+      const flicker = 1 + Math.sin(t*0.01)*0.2 + Math.random()*0.08;
+      candleGlow.intensity = 2.2 * flicker;
+      candleGlow2.intensity = 1.4 * flicker;
+      glowSprite.material.opacity = 0.85 * flicker;
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(animate);
+ 
+    function onResize(){
+      const w = wrap.clientWidth, h = wrap.clientHeight;
+      camera.aspect = w/h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w,h);
+    }
+    window.addEventListener('resize', onResize);
+  })();
+</script>
+ 
+</body>
+</html>
